@@ -100,11 +100,11 @@ export class NotificationRest {
   }
 }
 
-interface NotificationApiReadModel extends NotificationApiWriteModel {
+export interface NotificationApiReadModel extends NotificationApiWriteModel {
   id: number;
 }
 
-interface NotificationApiWriteModel {
+export interface NotificationApiWriteModel {
   pipelineId: number;
   condition: string;
   type: ApiNotificationType;
