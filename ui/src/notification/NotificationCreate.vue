@@ -30,17 +30,20 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+import { NotificationRest } from './NotificationRest';
+
+import { NOTIFICATION_SERVICE_URL } from '@/env';
 import NotificationConfig, {
   NotificationType,
 } from '@/notification/notificationConfig';
 import NotificationForm from '@/notification/NotificationForm.vue';
-import * as NotificationREST from '@/notification/notificationRest';
 
 @Component({
   components: { NotificationForm },
 })
 export default class NotificationCreate extends Vue {
   private isValid = false;
+  private notificationRest = new NotificationRest(NOTIFICATION_SERVICE_URL);
 
   private notification: NotificationConfig = {
     id: -1,
@@ -58,7 +61,7 @@ export default class NotificationCreate extends Vue {
   }
 
   private async onCreate(): Promise<void> {
-    await NotificationREST.create(this.notification);
+    await this.notificationRest.create(this.notification);
     this.$router
       .push({ name: 'notification-overview' })
       .catch(error =>

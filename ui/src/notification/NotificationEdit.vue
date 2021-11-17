@@ -32,15 +32,18 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+import { NotificationRest } from './NotificationRest';
+
+import { NOTIFICATION_SERVICE_URL } from '@/env';
 import NotificationConfig from '@/notification/notificationConfig';
 import NotificationForm from '@/notification/NotificationForm.vue';
-import * as NotificationREST from '@/notification/notificationRest';
 
 @Component({
   components: { NotificationForm },
 })
 export default class NotificationEdit extends Vue {
   private isValid = false;
+  private notificationRest = new NotificationRest(NOTIFICATION_SERVICE_URL);
 
   private notification: NotificationConfig | null = null;
 
@@ -59,7 +62,7 @@ export default class NotificationEdit extends Vue {
     pipelineId: number,
     notificationId: number,
   ): Promise<void> {
-    const notificationsOfPipeline = await NotificationREST.getAllByPipelineId(
+    const notificationsOfPipeline = await this.notificationRest.getAllByPipelineId(
       pipelineId,
     );
     this.notification =
@@ -71,7 +74,7 @@ export default class NotificationEdit extends Vue {
       return;
     }
 
-    await NotificationREST.update(this.notification);
+    await this.notificationRest.update(this.notification);
     this.$router
       .push({ name: 'notification-overview' })
       .catch(error =>
