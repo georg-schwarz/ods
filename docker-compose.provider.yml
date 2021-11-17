@@ -23,3 +23,9 @@ services:
       POSTGREST_URL: 'storage'
     volumes:
       - ./pacts:/pacts
+  notification:
+    build:
+      target: base
+    command: npm run test:provider
+    volumes:
+      - ./pacts:/pacts
