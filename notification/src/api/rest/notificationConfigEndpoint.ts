@@ -63,16 +63,12 @@ export class NotificationConfigEndpoint {
       return;
     }
 
-    try {
-      const config = await this.configService.getById(id);
-      if (config === undefined) {
-        res.status(404).send();
-        return;
-      }
-      res.status(200).send(config);
-    } catch (e) {
-      res.status(404).send(`Could not find config with id ${id}`);
+    const config = await this.configService.getById(id);
+    if (config === undefined) {
+      res.status(204).send();
+      return;
     }
+    res.status(200).send(config);
   };
 
   /**

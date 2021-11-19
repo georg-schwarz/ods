@@ -34,7 +34,15 @@ export class NotificationRest {
   async getById(id: number): Promise<NotificationConfig | undefined> {
     const response = await this.configsHttpClient.get(`/configs/${id}`);
 
-    if (response.data === undefined || response.data === '') {
+    if (response.status !== 200 && response.status !== 204) {
+      throw new Error(
+        `Request failed to get notification with id ${id}:\n${JSON.stringify(
+          response.data,
+        )}`,
+      );
+    }
+
+    if (response.status === 204) {
       return undefined;
     }
 

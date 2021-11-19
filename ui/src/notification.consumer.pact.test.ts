@@ -10,6 +10,7 @@ import {
   getAllSuccessResponse,
   getByIdRequest,
   getByIdRequestEmptyResponse,
+  getByIdRequestSuccessResponse,
   getByIdRequestTitle,
 } from './notification.consumer.pact.fixtures';
 import { NotificationRest } from './notification/NotificationRest';
@@ -82,6 +83,23 @@ pactWith(options, provider => {
           const notification = await restService.getById(3);
 
           expect(notification).toBeUndefined();
+        });
+      });
+
+      describe('when notification exists with that id', () => {
+        beforeEach(async () => {
+          await provider.addInteraction({
+            state: 'notifications with id 3 exists',
+            uponReceiving: getByIdRequestTitle,
+            withRequest: getByIdRequest,
+            willRespondWith: getByIdRequestSuccessResponse,
+          });
+        });
+
+        it('returns status code 200', async () => {
+          const notification = await restService.getById(3);
+
+          expect(notification).toStrictEqual(exampleNotificationConfig);
         });
       });
     });

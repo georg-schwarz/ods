@@ -1,5 +1,5 @@
 import { RequestOptions, ResponseOptions } from '@pact-foundation/pact';
-import { eachLike } from '@pact-foundation/pact/src/dsl/matchers';
+import { eachLike, like } from '@pact-foundation/pact/src/dsl/matchers';
 
 import NotificationConfig, {
   NotificationType,
@@ -7,7 +7,7 @@ import NotificationConfig, {
 import { NotificationApiReadModel } from './notification/NotificationRest';
 
 export const exampleReceivedNotificationConfig: NotificationApiReadModel = {
-  id: 123,
+  id: 3,
   pipelineId: 5,
   condition: 'true',
   type: NotificationType.WEBHOOK,
@@ -17,7 +17,7 @@ export const exampleReceivedNotificationConfig: NotificationApiReadModel = {
 };
 
 export const exampleNotificationConfig: NotificationConfig = {
-  id: 123,
+  id: 3,
   pipelineId: 5,
   condition: 'true',
   type: NotificationType.WEBHOOK,
@@ -61,9 +61,6 @@ export const getByIdRequest: RequestOptions = {
 
 export const getByIdRequestEmptyResponse: ResponseOptions = {
   status: 204,
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-  },
   body: '',
 };
 
@@ -72,5 +69,5 @@ export const getByIdRequestSuccessResponse: ResponseOptions = {
   headers: {
     'Content-Type': 'application/json; charset=utf-8',
   },
-  body: eachLike(exampleReceivedNotificationConfig),
+  body: like(exampleReceivedNotificationConfig),
 };
