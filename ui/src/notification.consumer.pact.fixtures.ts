@@ -51,3 +51,26 @@ export const getAllSuccessResponse: ResponseOptions = {
   },
   body: eachLike(exampleReceivedNotificationConfig),
 };
+
+export const getByIdRequestTitle =
+  'a request for getting a notification by id 5';
+export const getByIdRequest: RequestOptions = {
+  method: 'GET',
+  path: '/configs/5',
+};
+
+export const getByIdRequestEmptyResponse: ResponseOptions = {
+  status: 204,
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8',
+  },
+  body: '',
+};
+
+export const getByIdRequestSuccessResponse: ResponseOptions = {
+  status: 200,
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8',
+  },
+  body: eachLike(exampleReceivedNotificationConfig),
+};

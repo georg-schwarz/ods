@@ -8,6 +8,9 @@ import {
   getAllRequest,
   getAllRequestTitle,
   getAllSuccessResponse,
+  getByIdRequest,
+  getByIdRequestEmptyResponse,
+  getByIdRequestTitle,
 } from './notification.consumer.pact.fixtures';
 import { NotificationRest } from './notification/NotificationRest';
 
@@ -60,6 +63,25 @@ pactWith(options, provider => {
           const notifications = await restService.getAllByPipelineId(5);
 
           expect(notifications).toStrictEqual([]);
+        });
+      });
+    });
+
+    describe('getting one notification by id', () => {
+      describe('when no notification exists with that id', () => {
+        beforeEach(async () => {
+          await provider.addInteraction({
+            state: 'no notifications with id 5 exists',
+            uponReceiving: getByIdRequestTitle,
+            withRequest: getByIdRequest,
+            willRespondWith: getByIdRequestEmptyResponse,
+          });
+        });
+
+        it('returns status code 204', async () => {
+          const notification = await restService.getById(5);
+
+          expect(notification).toBeUndefined();
         });
       });
     });
