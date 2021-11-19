@@ -4,10 +4,22 @@ import { eachLike, like } from '@pact-foundation/pact/src/dsl/matchers';
 import NotificationConfig, {
   NotificationType,
 } from './notification/notificationConfig';
-import { NotificationApiReadModel } from './notification/NotificationRest';
+import {
+  NotificationApiReadModel,
+  NotificationApiWriteModel,
+} from './notification/NotificationRest';
 
 export const exampleReceivedNotificationConfig: NotificationApiReadModel = {
   id: 3,
+  pipelineId: 5,
+  condition: 'true',
+  type: NotificationType.WEBHOOK,
+  parameter: {
+    url: 'www.test-data.de',
+  },
+};
+
+export const exampleCreateNotificationConfig: NotificationApiWriteModel = {
   pipelineId: 5,
   condition: 'true',
   type: NotificationType.WEBHOOK,
@@ -66,6 +78,24 @@ export const getByIdRequestEmptyResponse: ResponseOptions = {
 
 export const getByIdRequestSuccessResponse: ResponseOptions = {
   status: 200,
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8',
+  },
+  body: like(exampleReceivedNotificationConfig),
+};
+
+export const createRequestTitle = 'a request for creating a notification';
+export const createRequest: RequestOptions = {
+  method: 'POST',
+  path: '/configs',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: exampleCreateNotificationConfig,
+};
+
+export const createRequestSuccessResponse: ResponseOptions = {
+  status: 201,
   headers: {
     'Content-Type': 'application/json; charset=utf-8',
   },

@@ -3,6 +3,9 @@ import path from 'path';
 import { JestPactOptions, pactWith } from 'jest-pact';
 
 import {
+  createRequest,
+  createRequestSuccessResponse,
+  createRequestTitle,
   exampleNotificationConfig,
   getAllEmptyResponse,
   getAllRequest,
@@ -100,6 +103,31 @@ pactWith(options, provider => {
           const notification = await restService.getById(3);
 
           expect(notification).toStrictEqual(exampleNotificationConfig);
+        });
+      });
+    });
+
+    describe('creating a notification config', () => {
+      describe('with success', () => {
+        beforeEach(async () => {
+          await provider.addInteraction({
+            state: 'whenever',
+            uponReceiving: createRequestTitle,
+            withRequest: createRequest,
+            willRespondWith: createRequestSuccessResponse,
+          });
+        });
+
+        it('returns status code 201', async () => {
+          const notification = await restService.create(
+            exampleNotificationConfig,
+          );
+
+          expect({ ...notification, id: undefined }).toStrictEqual({
+            ...exampleNotificationConfig,
+            id: undefined,
+          });
+          expect(notification.id).toBeGreaterThan(0);
         });
       });
     });

@@ -101,6 +101,8 @@ describe('Pact Provider Verification', () => {
         'no notifications exist for pipeline 5': setupEmptyState,
         'notifications with id 3 exists': setupSomeNotificationConfigs,
         'no notifications with id 3 exists': setupEmptyState,
+        // eslint-disable-next-line prettier/prettier
+        'whenever': setupSomeNotificationConfigs,
       },
     });
     await verifier.verifyProvider().finally(() => {
