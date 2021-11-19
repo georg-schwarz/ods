@@ -6,26 +6,16 @@ import {
   NotificationConfig,
   NotificationType,
 } from './notification-config/notificationConfig';
-import { NotificationRepository } from './notification-config/notificationRepository';
-import { PostgresNotificationRepository } from './notification-config/postgresNotificationRepository';
 
 import { port, server } from './index'; // The main method is automatically called due to this import
 
 const notificationConfigs: NotificationConfig[] = [];
 let nextNotificationConfigId = 0;
 
-jest.mock('./notification-config/postgresNotificationRepository', () => {
+jest.mock('./notification-config/notificationConfigService', () => {
   return {
-    initNotificationRepository: jest
-      .fn()
-      .mockImplementation((): Promise<NotificationRepository> => {
-        return Promise.resolve(new PostgresNotificationRepository());
-      }),
-    PostgresNotificationRepository: jest.fn().mockImplementation(() => {
+    NotificationConfigService: jest.fn().mockImplementation(() => {
       return {
-        init: jest.fn().mockImplementation((): Promise<void> => {
-          return Promise.resolve();
-        }),
         getAll: jest.fn().mockImplementation(() => notificationConfigs),
         getForPipeline: jest
           .fn()
@@ -43,20 +33,22 @@ jest.mock('./notification-config/postgresNotificationRepository', () => {
 
         create: jest
           .fn()
-          .mockImplementation(async (config: NotificationConfig) => {
-            const result: NotificationConfig = {
-              ...config,
-              id: ++nextNotificationConfigId,
-            };
-            notificationConfigs.push(result);
-            return await Promise.resolve(result);
-          }),
+          .mockImplementation(
+            async (config: NotificationConfig): Promise<NotificationConfig> => {
+              const result: NotificationConfig = {
+                ...config,
+                id: ++nextNotificationConfigId,
+              };
+              notificationConfigs.push(result);
+              return await Promise.resolve(result);
+            },
+          ),
 
         update: jest.fn(
           async (
             id: number,
             config: NotificationConfig,
-          ): Promise<NotificationConfig> => {
+          ): Promise<NotificationConfig | undefined> => {
             const configToUpdate = notificationConfigs.find(
               (config) => config.id === id,
             );
