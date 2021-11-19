@@ -31,11 +31,16 @@ export class NotificationRest {
     return this.fromApiReadModels(notifications);
   }
 
-  async getById(id: number): Promise<NotificationConfig> {
+  async getById(id: number): Promise<NotificationConfig | undefined> {
     const response = await this.configsHttpClient.get(`/configs/${id}`);
-    const notificationApiModel = JSON.parse(
-      response.data,
-    ) as NotificationApiReadModel;
+    const notificationApiModel = JSON.parse(response.data) as
+      | NotificationApiReadModel
+      | undefined;
+
+    if (notificationApiModel === undefined) {
+      return undefined;
+    }
+
     return this.fromApiReadModel(notificationApiModel);
   }
 

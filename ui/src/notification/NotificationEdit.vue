@@ -48,25 +48,18 @@ export default class NotificationEdit extends Vue {
   private notification: NotificationConfig | null = null;
 
   private mounted(): void {
-    const pipelineId = Number.parseInt(this.$route.params.pipelineId, 10);
     const notificationId = Number.parseInt(
       this.$route.params.notificationId,
       10,
     );
-    this.loadNotification(pipelineId, notificationId).catch(error =>
+    this.loadNotification(notificationId).catch(error =>
       console.error('Failed to load notification', error),
     );
   }
 
-  private async loadNotification(
-    pipelineId: number,
-    notificationId: number,
-  ): Promise<void> {
-    const notificationsOfPipeline = await this.notificationRest.getAllByPipelineId(
-      pipelineId,
-    );
+  private async loadNotification(notificationId: number): Promise<void> {
     this.notification =
-      notificationsOfPipeline.find(x => x.id === notificationId) ?? null;
+      (await this.notificationRest.getById(notificationId)) ?? null;
   }
 
   private async onUpdate(): Promise<void> {
