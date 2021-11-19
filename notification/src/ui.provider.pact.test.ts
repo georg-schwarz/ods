@@ -99,6 +99,8 @@ describe('Pact Provider Verification', () => {
       stateHandlers: {
         'some notifications exist for pipeline 5': setupSomeNotificationConfigs,
         'no notifications exist for pipeline 5': setupEmptyState,
+        'notifications with id 3 exists': setupSomeNotificationConfigs,
+        'no notifications with id 3 exists': setupEmptyState,
       },
     });
     await verifier.verifyProvider().finally(() => {

@@ -71,7 +71,7 @@ pactWith(options, provider => {
       describe('when no notification exists with that id', () => {
         beforeEach(async () => {
           await provider.addInteraction({
-            state: 'no notifications with id 5 exists',
+            state: 'no notifications with id 3 exists',
             uponReceiving: getByIdRequestTitle,
             withRequest: getByIdRequest,
             willRespondWith: getByIdRequestEmptyResponse,
@@ -79,7 +79,7 @@ pactWith(options, provider => {
         });
 
         it('returns status code 204', async () => {
-          const notification = await restService.getById(5);
+          const notification = await restService.getById(3);
 
           expect(notification).toBeUndefined();
         });

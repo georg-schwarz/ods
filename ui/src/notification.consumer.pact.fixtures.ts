@@ -53,10 +53,10 @@ export const getAllSuccessResponse: ResponseOptions = {
 };
 
 export const getByIdRequestTitle =
-  'a request for getting a notification by id 5';
+  'a request for getting a notification by id 3';
 export const getByIdRequest: RequestOptions = {
   method: 'GET',
-  path: '/configs/5',
+  path: '/configs/3',
 };
 
 export const getByIdRequestEmptyResponse: ResponseOptions = {
