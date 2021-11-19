@@ -10,6 +10,7 @@ import { NotificationConfigEndpoint } from './api/rest/notificationConfigEndpoin
 import { NotificationExecutionEndpoint } from './api/rest/notificationExecutionEndpoint';
 import { TriggerEventHandler } from './api/triggerEventHandler';
 import { AMQP_URL, CONNECTION_BACKOFF, CONNECTION_RETRIES } from './env';
+import { NotificationConfigService } from './notification-config/notificationConfigService';
 import { initNotificationRepository } from './notification-config/postgresNotificationRepository';
 import VM2SandboxExecutor from './notification-execution/condition-evaluation/vm2SandboxExecutor';
 import NotificationExecutor from './notification-execution/notificationExecutor';
@@ -38,8 +39,11 @@ async function main(): Promise<void> {
     notificationRepository,
     notificationExecutor,
   );
-  const notificationConfigEndpoint = new NotificationConfigEndpoint(
+  const notificationConfigService = new NotificationConfigService(
     notificationRepository,
+  );
+  const notificationConfigEndpoint = new NotificationConfigEndpoint(
+    notificationConfigService,
   );
   const notificationExecutionEndpoint = new NotificationExecutionEndpoint(
     triggerEventHandler,
