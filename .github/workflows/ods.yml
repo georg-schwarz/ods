@@ -313,6 +313,7 @@ jobs:
         run: |
           bash ./storage/storage-mq/cdct-provider.sh
 
+  # ----------------- Notification Provider-side CDC-Test -----------------
   notification-provider:
     name: Notification Provider-side CDC-Test
     runs-on: ubuntu-18.04
@@ -559,7 +560,7 @@ jobs:
     name: Notifcation Publish
     runs-on: ubuntu-18.04
 
-    needs: [systemtest]
+    needs: [systemtest, notification-provider]
 
     if: github.repository == 'jvalue/ods' && github.ref == 'refs/heads/main'
     steps:

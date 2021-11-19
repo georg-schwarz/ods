@@ -3,7 +3,8 @@ const waitOn = require('wait-on')
 
 const URL = process.env.NOTIFICATION_API || 'http://localhost:8080'
 
-const MOCK_RECEIVER_URL = process.env.MOCK_RECEIVER_URL || 'http://localhost:8081'
+const MOCK_RECEIVER_URL =
+  process.env.MOCK_RECEIVER_URL || 'http://localhost:8081'
 
 describe('Notification Service', () => {
   beforeAll(async () => {
@@ -30,12 +31,10 @@ describe('Notification Service', () => {
     expect(receiverResponse.body).toEqual([])
   })
 
-  test('should return status 404 on non-existing notification config', async () => {
-    const receiverResponse = await request(URL)
-      .get('/configs/487749')
-      .send()
+  test('should return status 204 on non-existing notification config', async () => {
+    const receiverResponse = await request(URL).get('/configs/487749').send()
 
-    expect(receiverResponse.status).toEqual(404)
+    expect(receiverResponse.status).toEqual(204)
   })
 
   test('should create, retrieve, updated, and delete notification config', async () => {
@@ -56,9 +55,15 @@ describe('Notification Service', () => {
     const id = notificationResponse.body.id
 
     // compare response with initial webhook config
-    expect(notificationResponse.body.pipelineId).toEqual(webhookConfig.pipelineId)
-    expect(notificationResponse.body.condition).toEqual(webhookConfig.condition)
-    expect(notificationResponse.body.parameter.url).toEqual(webhookConfig.parameter.url)
+    expect(notificationResponse.body.pipelineId).toEqual(
+      webhookConfig.pipelineId
+    )
+    expect(notificationResponse.body.condition).toEqual(
+      webhookConfig.condition
+    )
+    expect(notificationResponse.body.parameter.url).toEqual(
+      webhookConfig.parameter.url
+    )
 
     // PUT / UPDATE
     webhookConfig.pipelineId = 2
@@ -69,31 +74,33 @@ describe('Notification Service', () => {
 
     // compare response with initial webhook config
     expect(notificationResponse.body.id).toEqual(id)
-    expect(notificationResponse.body.pipelineId).toEqual(webhookConfig.pipelineId)
+    expect(notificationResponse.body.pipelineId).toEqual(
+      webhookConfig.pipelineId
+    )
 
     // GET / RETRIEVE
-    notificationResponse = await request(URL)
-      .get(`/configs/${id}`)
-      .send()
+    notificationResponse = await request(URL).get(`/configs/${id}`).send()
     expect(notificationResponse.status).toEqual(200)
 
     // compare response with initial webhook config
     expect(notificationResponse.body.id).toEqual(id)
-    expect(notificationResponse.body.pipelineId).toEqual(webhookConfig.pipelineId)
-    expect(notificationResponse.body.condition).toEqual(webhookConfig.condition)
-    expect(notificationResponse.body.parameter.url).toEqual(webhookConfig.parameter.url)
+    expect(notificationResponse.body.pipelineId).toEqual(
+      webhookConfig.pipelineId
+    )
+    expect(notificationResponse.body.condition).toEqual(
+      webhookConfig.condition
+    )
+    expect(notificationResponse.body.parameter.url).toEqual(
+      webhookConfig.parameter.url
+    )
 
     // DELETE
-    notificationResponse = await request(URL)
-      .delete(`/configs/${id}`)
-      .send()
+    notificationResponse = await request(URL).delete(`/configs/${id}`).send()
     expect(notificationResponse.status).toEqual(200)
 
     // GET / RETRIEVE not exist
-    notificationResponse = await request(URL)
-      .get(`/configs/${id}`)
-      .send()
-    expect(notificationResponse.status).toEqual(404)
+    notificationResponse = await request(URL).get(`/configs/${id}`).send()
+    expect(notificationResponse.status).toEqual(204)
   })
 
   test('should aggregate different types notifications to a list for a pipeline', async () => {
