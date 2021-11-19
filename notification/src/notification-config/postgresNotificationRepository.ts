@@ -117,7 +117,7 @@ export class PostgresNotificationRepository implements NotificationRepository {
   async update(
     id: number,
     config: NotificationConfig,
-  ): Promise<NotificationConfig> {
+  ): Promise<NotificationConfig | undefined> {
     const parameter = this.escapeQuotes(config.parameter);
     const values = [
       id,
@@ -133,23 +133,23 @@ export class PostgresNotificationRepository implements NotificationRepository {
     )) as QueryResult<DatabaseNotification>;
     const notifications = this.deserializeNotifications(resultSet);
     if (notifications.length === 0) {
-      throw Error(
-        `Could not update notification config: ${JSON.stringify(config)}`,
-      );
+      return undefined;
     }
 
     return notifications[0];
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number): Promise<NotificationConfig | undefined> {
     const resultSet = (await this.postgresClient.executeQuery(
       DELETE_NOTIFICATION_STATEMENT,
       [id],
     )) as QueryResult<DatabaseNotification>;
 
-    if (resultSet.rowCount === 0) {
-      throw Error(`Could not delete notification config with id ${id}`);
+    const notifications = this.deserializeNotifications(resultSet);
+    if (notifications.length === 0) {
+      return undefined;
     }
+    return notifications[0];
   }
 
   private escapeQuotes(data: unknown): string {

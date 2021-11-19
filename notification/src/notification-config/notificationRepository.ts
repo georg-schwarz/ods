@@ -9,6 +9,6 @@ export interface NotificationRepository {
   update: (
     id: number,
     config: NotificationConfig,
-  ) => Promise<NotificationConfig>;
-  delete: (id: number) => Promise<void>;
+  ) => Promise<NotificationConfig | undefined>;
+  delete: (id: number) => Promise<NotificationConfig | undefined>;
 }

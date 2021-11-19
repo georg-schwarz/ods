@@ -56,15 +56,21 @@ jest.mock('./notification-config/notificationConfigService', () => {
           },
         ),
 
-        delete: jest.fn((id: number): Promise<void> => {
-          const indexOfConfigToDelete = notificationConfigs.findIndex(
-            (config) => config.id === id,
-          );
-          if (indexOfConfigToDelete !== -1) {
-            notificationConfigs.splice(indexOfConfigToDelete, 1);
-          }
-          return Promise.resolve();
-        }),
+        delete: jest.fn(
+          (id: number): Promise<NotificationConfig | undefined> => {
+            const indexOfConfigToDelete = notificationConfigs.findIndex(
+              (config) => config.id === id,
+            );
+            let deletedConfig: NotificationConfig | undefined;
+            if (indexOfConfigToDelete !== -1) {
+              deletedConfig = notificationConfigs.splice(
+                indexOfConfigToDelete,
+                1,
+              )[0];
+            }
+            return Promise.resolve(deletedConfig);
+          },
+        ),
       };
     }),
   };

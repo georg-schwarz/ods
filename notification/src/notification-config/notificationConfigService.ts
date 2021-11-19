@@ -26,14 +26,10 @@ export class NotificationConfigService {
     id: number,
     config: NotificationConfig,
   ): Promise<NotificationConfig | undefined> {
-    try {
-      return await this.notificationRepository.update(id, config);
-    } catch (e) {
-      return undefined;
-    }
+    return await this.notificationRepository.update(id, config);
   }
 
-  delete(id: number): Promise<void> {
+  delete(id: number): Promise<NotificationConfig | undefined> {
     return this.notificationRepository.delete(id);
   }
 }

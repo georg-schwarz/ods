@@ -78,10 +78,26 @@ export class NotificationRest {
     );
   }
 
-  async remove(notificationConfig: NotificationConfig): Promise<void> {
-    const id = notificationConfig.id;
+  async remove(id: number): Promise<NotificationConfig | undefined> {
+    const response = await this.configsHttpClient.delete(`/configs/${id}`);
 
-    return await this.configsHttpClient.delete(`/configs/${id}`);
+    if (response.status !== 200 && response.status !== 204) {
+      throw new Error(
+        `Request failed to delete notification with id ${id}:\n${JSON.stringify(
+          response.data,
+        )}`,
+      );
+    }
+
+    if (response.status === 204) {
+      return undefined;
+    }
+
+    const deletedNotificationApiModel = JSON.parse(
+      response.data,
+    ) as NotificationApiReadModel;
+
+    return this.fromApiReadModel(deletedNotificationApiModel);
   }
 
   private toApiWriteModel(

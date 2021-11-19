@@ -101,3 +101,22 @@ export const createRequestSuccessResponse: ResponseOptions = {
   },
   body: like(exampleReceivedNotificationConfig),
 };
+
+export const deleteRequestTitle = 'a request for deleting a notification';
+export const deleteRequest: RequestOptions = {
+  method: 'DELETE',
+  path: '/configs/3',
+};
+
+export const deleteRequestSuccessfulResponse: ResponseOptions = {
+  status: 200,
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8',
+  },
+  body: like(exampleReceivedNotificationConfig),
+};
+
+export const deleteRequestFailureResponse: ResponseOptions = {
+  status: 204,
+  body: '',
+};

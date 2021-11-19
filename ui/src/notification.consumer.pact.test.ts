@@ -6,6 +6,10 @@ import {
   createRequest,
   createRequestSuccessResponse,
   createRequestTitle,
+  deleteRequest,
+  deleteRequestFailureResponse,
+  deleteRequestSuccessfulResponse,
+  deleteRequestTitle,
   exampleNotificationConfig,
   getAllEmptyResponse,
   getAllRequest,
@@ -128,6 +132,42 @@ pactWith(options, provider => {
             id: undefined,
           });
           expect(notification.id).toBeGreaterThan(0);
+        });
+      });
+    });
+
+    describe('deleting a notification config', () => {
+      describe('with success', () => {
+        beforeEach(async () => {
+          await provider.addInteraction({
+            state: 'notifications with id 3 exists',
+            uponReceiving: deleteRequestTitle,
+            withRequest: deleteRequest,
+            willRespondWith: deleteRequestSuccessfulResponse,
+          });
+        });
+
+        it('returns the deleted config', async () => {
+          const deletedConfig = await restService.remove(3);
+
+          expect(deletedConfig).toStrictEqual(exampleNotificationConfig);
+        });
+      });
+
+      describe('with notification not existing', () => {
+        beforeEach(async () => {
+          await provider.addInteraction({
+            state: 'no notifications with id 3 exists',
+            uponReceiving: deleteRequestTitle,
+            withRequest: deleteRequest,
+            willRespondWith: deleteRequestFailureResponse,
+          });
+        });
+
+        it('returns undefined', async () => {
+          const deletedConfig = await restService.remove(3);
+
+          expect(deletedConfig).toBeUndefined();
         });
       });
     });

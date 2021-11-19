@@ -126,7 +126,7 @@ export default class PipelineNotifications extends Vue {
   private async onDeleteNotification(
     notification: NotificationConfig,
   ): Promise<void> {
-    await this.notificationRest.remove(notification);
+    await this.notificationRest.remove(notification.id);
     await this.loadNotifications();
   }
 

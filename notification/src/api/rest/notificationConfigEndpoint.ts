@@ -111,8 +111,13 @@ export class NotificationConfigEndpoint {
     }
 
     // Delete Config
-    await this.configService.delete(configId);
-    res.status(200).send('DELETED');
+    const deletedConfig = await this.configService.delete(configId);
+    if (deletedConfig === undefined) {
+      res.status(204).send();
+      return;
+    }
+
+    res.status(200).send(deletedConfig);
   };
 
   /**
